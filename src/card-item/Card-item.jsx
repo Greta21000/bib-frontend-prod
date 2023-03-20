@@ -1,8 +1,10 @@
-import React from "react";
+import React, {useContext} from "react";
 import { NavLink } from "react-router-dom";
+import { AuthContext } from "../context/auth-context";
 import "./Card-item.css";
 
 const CardItem = (props) => {
+  const auth = useContext(AuthContext);
   const confirmDeleteHandler = async () => {
     // console.log("Deleted");
 
@@ -13,7 +15,7 @@ const CardItem = (props) => {
           method: "DELETE",
           headers: {
             "Content-type": "application/json",
-            // Authorization: "Bearer " + auth.token,
+             Authorization: "Bearer " + auth.token,
           },
         }
       ).catch((error) => {

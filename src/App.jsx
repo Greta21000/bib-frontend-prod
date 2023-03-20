@@ -1,55 +1,100 @@
-import "./App.css";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch,
+} from "react-router-dom";
 
 import AuthContext from "./context/auth-context";
+
 import { useAuth } from "./hooks/auth-hook";
 
+import "./App.css";
+
+import Header from "./header/Header";
+
 import Films from "./pages/Films";
-import Musiques from "./pages/Musiques";
-import Header from "./header/header";
+
+import Musiques from "./pages/musiques";
+
 import NewItem from "./pages/NewItem";
-import UpdateItem from "./pages/Update";
-import Login from "./pages/Login";
+
+import UpdateItem from "./pages/UpdateItem2";
+
+import UpdateItem2 from "./pages/UpdateItem2";
+
+// import AuthPage from './user/auth';
+
+import LoginPage from "./pages/login";
+
+import SignupPage from "./pages/signup";
 
 function App() {
-  const {token, login, userId } = useAuth();
-  console.log({token})
-  console.log("!token : ", !token)
+  const { token, login, logout, userId } = useAuth();
+
+  console.log({ token });
+
   return (
     <AuthContext.Provider
-    value={{
-      isLoggedIn: !!token,
-      token: token,
-      userId: userId,
-      login: login,
-      logout: () => {}
-    }}
+      value={{
+        isLoggedIn: !!token,
+
+        token: token,
+
+        userId: userId,
+
+        login: login,
+
+        logout: logout,
+      }}
     >
       <div className="App">
-        <h1>Bienvenue au GRETA</h1>
+        <h1>Bienvenue au Greta</h1>
+
         <Router>
           <Header />
+
           <Route path="/" exact>
             <Musiques />
           </Route>
+
           <Route path="/musiques" exact>
             <Musiques />
           </Route>
+
           <Route path="/films" exact>
             <Films />
           </Route>
+
+          {!token && <Route path="/login" component={LoginPage} exact />}
+
+          {!token && <Route path="/signup" component={SignupPage} exact />}
+
           <Route path="/musique/new" exact>
-            <NewItem route="musiques" />
+            {/* <NewItem route="musiques" /> */}
+
+            {!token ? <Redirect to="/login" /> : <NewItem route="musiques" />}
           </Route>
+
           <Route path="/film/new" exact>
             <NewItem route="films" />
           </Route>
-          <Route path="/update" exact>
-            <UpdateItem />
+
+          <Route path="/musiques/:oeuvreId">
+            {!token ? (
+              <Redirect to="/login" />
+            ) : (
+              <UpdateItem2 route="musiques" />
+            )}
           </Route>
-          <Route path="/login" exact>
-            <Login />
+
+          <Route path="/films/:oeuvreId">
+            {/* <UpdateItem2 route="films" /> */}
+
+            {!token ? <Redirect to="/login" /> : <UpdateItem2 route="films" />}
           </Route>
+
+          <Redirect to="/" />
         </Router>
       </div>
     </AuthContext.Provider>
