@@ -6,6 +6,7 @@ import Musiques from "./pages/Musiques";
 import Header from "./header/header";
 import NewItem from "./pages/NewItem";
 import UpdateItem from "./pages/Update";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -31,6 +32,9 @@ function App() {
         </Route>
         <Route path="/update" exact>
           <UpdateItem />
+        </Route>
+        <Route path="/login" exact>
+          <Login />
         </Route>
       </Router>
     </div>
