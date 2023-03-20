@@ -1,22 +1,58 @@
-import React from 'react'
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import './Card-item.css'
+import React from "react";
+import { NavLink } from "react-router-dom";
+import "./Card-item.css";
 
 const CardItem = (props) => {
-  return (
-    <div className='card-container'>
-      <img alt={props.oeuvre.titre}
-      className='image'
-      src={props.oeuvre.imageUrl} />
-      <h1>{props.oeuvre.titre}</h1>
-      <p>{props.oeuvre.auteur} - {props.oeuvre.annee}</p>
-      <Container>
-        <Button variant="outline-secondary" size="sm" className="m-2 ">Editer</Button>
-        <Button variant="outline-danger" size="sm" className="m-2">Supprimer</Button>
-        </Container>
-    </div>
-  )
-}
+  const confirmDeleteHandler = async () => {
+    // console.log("Deleted");
 
-export default CardItem
+    try {
+      await fetch(
+        `http://localhost:5000/api/${props.route}/${props.oeuvre.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-type": "application/json",
+            // Authorization: "Bearer " + auth.token,
+          },
+        }
+      ).catch((error) => {
+        console.log(error);
+      });
+
+      props.onDelete(props.oeuvre.id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <div className="card-container">
+      <img
+        alt={props.oeuvre.titre}
+        className="image"
+        src={props.oeuvre.imageUrl}
+      />
+      <h1>{props.oeuvre.titre}</h1>
+      <p>
+        {props.oeuvre.auteur} - {props.oeuvre.annee}
+      </p>
+      <div className="card-item__actions">
+        <ul>
+          <li>
+            <button>
+              <NavLink to={`/${props.route}/${props.oeuvre.id}`}>
+                Editer
+              </NavLink>
+            </button>
+          </li>
+          <li>
+            <button onClick={confirmDeleteHandler}>Supprimer</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default CardItem;

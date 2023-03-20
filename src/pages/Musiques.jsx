@@ -73,10 +73,17 @@ const Musiques = () => {
   musique.titre.toLowerCase().includes(searchField.toLowerCase())
 );
 
+const itemDeleteHandler = (deletedItemId) => {
+  console.log(deletedItemId);
+  setMusiques((prevMusiques) =>
+    prevMusiques.filter((musique) => musique.id !== deletedItemId)
+  );
+};
+
   return (
     <div>
       <SearchBox onChildSearchChange={OnParentSearchChange} />
-      <CardList oeuvres={filteredMusiques} />
+      <CardList oeuvres={filteredMusiques} onDeleteItem={itemDeleteHandler} route="musiques" />
     </div>
   );
 };

@@ -7,7 +7,7 @@ const CardList = (props) => {
   return (
     <div className='card-list' >
         {props.oeuvres.map(oeuvreItem => (
-            <CardItem key={oeuvreItem.id} oeuvre={oeuvreItem} />
+            <CardItem key={oeuvreItem.id} oeuvre={oeuvreItem} onDelete={props.onDeleteItem} route={props.route} />
         )
             )}
     </div>

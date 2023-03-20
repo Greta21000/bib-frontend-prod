@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from '../context/auth-context'
 
 import "./Update.css";
 
 const Login = () => {
+    const auth = useContext(AuthContext)
   const [errors, setErrors] = useState({});
   const [formIsValid, setFormIsValid] = useState(false);
   const [form, setForm] = useState({
@@ -38,6 +40,7 @@ const Login = () => {
             throw new Error(responseData.message)
           }
           console.log({responseData})
+          auth.login(responseData.userId, responseData.token)
       } catch (err) {
         console.log(err)
       }
@@ -46,14 +49,14 @@ const Login = () => {
   };
 
   const handleValidation = (itemToControl, itemValue) => {
-    let inputErrors = {};
+    let inputErrors = "";
     let isFormValid = true;
 
     if (!itemToControl || itemToControl === "email") {
       if (!itemValue) {
         isFormValid = false;
 
-        inputErrors.email = "L'email doit être renseigné!";
+        inputErrors = "L'email doit être renseigné!";
       } else if (typeof itemValue !== undefined) {
         if (
           !itemValue.match(
@@ -62,7 +65,7 @@ const Login = () => {
         ) {
           isFormValid = false;
 
-          inputErrors.email = "Doit être un email!";
+          inputErrors = "Doit être un email!";
         }
       }
     }
@@ -71,17 +74,18 @@ const Login = () => {
       if (!itemValue) {
         isFormValid = false;
 
-        inputErrors.password = "Le mot de passe doit être renseigné!";
+        inputErrors = "Le mot de passe doit être renseigné!";
       } else if (typeof itemValue !== undefined) {
         if (!itemValue.match(/[A-Za-z\d]$/)) {
           isFormValid = false;
 
-          inputErrors.password = "Ne doit contenir que des alphanumériques!";
+          inputErrors = "Ne doit contenir que des alphanumériques!";
         }
       }
     }
 
-    setErrors(inputErrors);
+    setErrors({...errors, 
+        [itemToControl]: inputErrors});
 
     // setFormIsValid(isFormValid);
 
@@ -105,6 +109,7 @@ const Login = () => {
           placeholder="Renseigner l'email"
           onChange={(e) => handleChange(e)}
         />
+        <span className="error-rhf" >{errors.email}</span>
 
         <label htmlFor="password" className="label-rhf">
           Password<span>*</span>
@@ -117,6 +122,7 @@ const Login = () => {
           placeholder="Renseigner le mdp"
           onChange={(e) => handleChange(e)}
         />
+        <span className="error-rhf" >{errors.password}</span>
         <input type="submit" className="input-rhf" />
       </form>
     </div>

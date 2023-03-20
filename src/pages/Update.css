@@ -8,6 +8,10 @@
   .p-rhf {
     color: #dd5283;
   }
+
+  .error-rhf {
+    color: red;
+  }
   
   .p-rhf::before {
     display: inline;
